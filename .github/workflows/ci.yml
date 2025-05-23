@@ -23,10 +23,13 @@ jobs:
     - name: Run data processing
       run: python main.py
 
-    - name: Commit processed dataset
+    - name: Commit and push processed dataset
       run: |
-        git config --global user.name 'github-actions'
-        git config --global user.email 'github-actions@github.com'
+        git config --global user.name github-actions
+        git config --global user.email github-actions@github.com
         git add data/processed_dataset.csv || echo "Nothing to add"
         git commit -m "Add processed dataset" || echo "Nothing to commit"
-        git push || echo "Push failed or nothing to push"
+        git push origin HEAD:${{ github.ref }} || echo "Nothing to push"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
